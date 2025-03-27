@@ -12,7 +12,7 @@ component_probs = {"A": 0.3, "B": 0.5, "C": 0.2}
 lambda_orders = 2
 max_daily_production = 3
 volume_step = 50
-max_volume = 1800  # 150 ft³ x 3 components x 4 days
+max_volume = 1800  
 
 # --- Step 1: Daily Production Volume Distribution ---
 volume_dist = defaultdict(float)

@@ -57,7 +57,7 @@ for (v, d) in states:
 # --- Step 4: Save Transition Matrix to CSV ---
 df = pd.DataFrame(transition_matrix, index=[str(s) for s in states], columns=[str(s) for s in states])
 df.to_csv("acme_transition_matrix.csv")
-print("✅ Transition matrix saved as 'acme_transition_matrix.csv'.")
+print("Transition matrix saved as 'acme_transition_matrix.csv'.")
 
 # --- Optional Step 5: Visualize a subset ---
 subset_rows = [s for s in states if s[1] == 1]
@@ -72,7 +72,7 @@ plt.ylabel("From State")
 plt.tight_layout()
 plt.show()
 
-# Parameters
+# Parameters - research this better
 k = 120  # variable cost per m³
 c = 0.1 * k  # must be ≥ 10% of k
 K1 = 950  # 900 ft³ truck

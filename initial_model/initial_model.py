@@ -60,17 +60,17 @@ df.to_csv("acme_transition_matrix.csv")
 print("Transition matrix saved as 'acme_transition_matrix.csv'.")
 
 # --- Optional Step 5: Visualize a subset ---
-subset_rows = [s for s in states if s[1] == 1]
-subset_cols = [s for s in states if s[1] == 2]
-subset_df = df.loc[[str(s) for s in subset_rows], [str(s) for s in subset_cols]]
+#subset_rows = [s for s in states if s[1] == 1]
+#subset_cols = [s for s in states if s[1] == 2]
+#subset_df = df.loc[[str(s) for s in subset_rows], [str(s) for s in subset_cols]]
 
-plt.figure(figsize=(14, 8))
-sns.heatmap(subset_df, cmap="Blues", cbar=True)
-plt.title("Transition Probabilities from Day 1 to Day 2 (subset)")
-plt.xlabel("To State")
-plt.ylabel("From State")
-plt.tight_layout()
-plt.show()
+#plt.figure(figsize=(14, 8))
+#sns.heatmap(subset_df, cmap="Blues", cbar=True)
+#plt.title("Transition Probabilities from Day 1 to Day 2 (subset)")
+#plt.xlabel("To State")
+#plt.ylabel("From State")
+#plt.tight_layout()
+#plt.show()
 
 # Parameters - research this better
 k = 120  # variable cost per m³

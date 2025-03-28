@@ -55,15 +55,17 @@ for v in volume_states:
         P[i, j] += prob
 
 # --- Step 4: Save to CSV ---
-df = pd.DataFrame(P, index=volume_states, columns=volume_states)
-df.to_csv("prof_suggested_model.csv")
-print("Transition matrix saved")
+#df = pd.DataFrame(P, index=volume_states, columns=volume_states)
+#df.to_csv("prof_suggested_model.csv")
+#print("Transition matrix saved")
 
 # --- Step 5: Visualize Transition Probabilities ---
-plt.figure(figsize=(14, 8))
-sns.heatmap(df, cmap="Blues", cbar=True)
-plt.title("One-Day Volume Transition Matrix")
-plt.xlabel("Next Volume (ft³)")
-plt.ylabel("Current Volume (ft³)")
-plt.tight_layout()
-plt.show()
+#plt.figure(figsize=(14, 8))
+#sns.heatmap(df, cmap="Blues", cbar=True)
+#plt.title("One-Day Volume Transition Matrix")
+#plt.xlabel("Next Volume (ft³)")
+#plt.ylabel("Current Volume (ft³)")
+#plt.tight_layout()
+#plt.show()
+
+

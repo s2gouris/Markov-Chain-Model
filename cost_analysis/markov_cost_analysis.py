@@ -19,7 +19,7 @@ K2 = 328                                # 1800 ft³ truck cost
 c = 0.10 * k_per_m3                     # Holding cost per m³ per day
 holding_cost_per_cuft_per_day = c / 35.3147  # Convert m³ to ft³
 
-thresholds = np.arange(600, 1200 + 50, 50)
+thresholds = np.arange(0, 1850, 50)
 
 # --- Steady State Distribution ---
 eigvals, eigvecs = np.linalg.eig(P.T)
@@ -75,13 +75,28 @@ print(df_results)
 df_results.to_csv("threshold_policy_costs.csv", index=False)
 
 # --- Plot Costs vs Threshold ---
-plt.figure(figsize=(10, 6))
-plt.plot(df_results["Threshold"], df_results["3PL_Cost"], marker='o', label="3PL Cost")
-plt.plot(df_results["Threshold"], df_results["Truck_Cost"], marker='s', label="Truck Rental Cost")
-plt.xlabel("Shipment Threshold (ft³)")
-plt.ylabel("Expected Daily Cost ($)")
-plt.title("Cost vs Shipment Threshold")
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
-plt.show()
+#plt.figure(figsize=(10, 6))
+#plt.plot(df_results["Threshold"], df_results["3PL_Cost"], marker='o', label="3PL Cost")
+#plt.plot(df_results["Threshold"], df_results["Truck_Cost"], marker='s', label="Truck Rental Cost")
+#plt.xlabel("Shipment Threshold (ft³)")
+#plt.ylabel("Expected Daily Cost ($)")
+#plt.title("Cost vs Shipment Threshold")
+#plt.legend()
+#plt.grid(True)
+#plt.tight_layout()
+#plt.show()
+
+# --- Optimal Threshold Analysis ---
+opt_3pl = df_results.loc[df_results["3PL_Cost"].idxmin()]
+opt_truck = df_results.loc[df_results["Truck_Cost"].idxmin()]
+
+# Determine truck size based on threshold
+truck_size = "900 ft³" if opt_truck["Threshold"] <= 900 else "1800 ft³"
+
+# Print results
+print(f"Optimal 3PL Threshold: {int(opt_3pl['Threshold'])} ft³")
+print(f"Expected 3PL Cost: ${opt_3pl['3PL_Cost']} per day")
+
+print(f"\nOptimal Truck Threshold: {int(opt_truck['Threshold'])} ft³")
+print(f"Expected Truck Cost: ${opt_truck['Truck_Cost']} per day")
+print(f"Truck Size Used: {truck_size}")

@@ -68,9 +68,18 @@ df.to_csv("extended_transition_matrix.csv")
 print("Extended transition matrix saved successfully.")
 
 # --- Step 5: Visualize with a Heatmap ---
-plt.figure(figsize=(10, 8))
-sns.heatmap(df, cmap="YlGnBu", annot=False, fmt=".2f", cbar=True)
-plt.title("Extended Transition Matrix Heatmap")
-plt.xlabel("New State (Volume, Due Date)")
+#plt.figure(figsize=(10, 8))
+#sns.heatmap(df, cmap="YlGnBu", annot=False, fmt=".2f", cbar=True)
+#plt.title("Extended Transition Matrix Heatmap")
+#plt.xlabel("New State (Volume, Due Date)")
+#plt.ylabel("Current State (Volume, Due Date)")
+#plt.show()
+
+# --- Step 5: Visualize Transition Probabilities ---
+plt.figure(figsize=(14, 8))
+sns.heatmap(df, cmap="Blues", cbar=True)
+plt.title("Extended Transition Matrix")
+plt.xlabel("New state (Volume, Due Date)")
 plt.ylabel("Current State (Volume, Due Date)")
+plt.tight_layout()
 plt.show()

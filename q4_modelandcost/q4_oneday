@@ -1,0 +1,78 @@
+import numpy as np
+import pandas as pd
+import itertools
+import math
+import seaborn as sns
+import matplotlib.pyplot as plt
+from collections import defaultdict
+
+# --- Parameters ---
+component_volumes = {"A": 50, "B": 100, "C": 150}
+component_probs = {"A": 0.3, "B": 0.5, "C": 0.2}
+lambda_orders = 2
+max_daily_production = 3
+volume_step = 50
+max_volume = 1800
+
+
+def generate_poisson_distribution(lambda_orders, max_orders=5):
+    poisson_probs = [((lambda_orders ** k) * np.exp(-lambda_orders)) / math.factorial(k) for k in range(max_orders)]
+    poisson_probs.append(1 - sum(poisson_probs))  # Bucket for 6+ orders
+    return poisson_probs
+
+
+# --- Step 1: Daily Volume Distribution ---
+volume_dist = defaultdict(float)
+component_list = list(component_volumes.keys())
+poisson_probs = generate_poisson_distribution(lambda_orders)
+
+for n_orders, p in enumerate(poisson_probs):
+    actual_orders = min(n_orders, max_daily_production)
+    combos = list(itertools.product(component_list, repeat=actual_orders))
+    for combo in combos:
+        vol = sum(component_volumes[c] for c in combo)
+        prob = p
+        for c in component_list:
+            if actual_orders > 0:
+                prob *= (component_probs[c] ** combo.count(c))
+        volume_dist[vol] += prob
+
+# Ensure all volume states are represented
+for v in range(0, max_volume + volume_step, volume_step):
+    if v not in volume_dist:
+        volume_dist[v] = 0.0
+
+# --- Step 2: Define Volume States ---
+volume_states = list(range(0, max_volume + volume_step, volume_step))  # 0, 50, ..., 1800
+state_index = {state: i for i, state in enumerate(volume_states)}
+n_states = len(volume_states)
+
+# --- Step 3: Build One-Day Transition Matrix ---
+P = np.zeros((n_states, n_states))
+
+for v, i in state_index.items():
+    for added_v, prob in volume_dist.items():
+        new_total = v + added_v
+        if new_total > max_volume:
+            carryover = new_total - max_volume
+            new_total = max_volume  # Cap at max volume
+            if carryover in state_index:
+                P[i, state_index[carryover]] += prob  # Assign excess to carryover state
+        j = state_index[new_total]
+        P[i, j] += prob
+
+# Normalize rows to ensure proper probability distribution
+P /= P.sum(axis=1, keepdims=True)
+
+# --- Step 4: Save One-Day Transition Matrix ---
+df = pd.DataFrame(P, index=volume_states, columns=volume_states)
+df.to_csv("one_day_transition_matrix.csv")
+print("One-day transition matrix saved successfully.")
+
+# --- Step 5: Visualize with a Heatmap ---
+plt.figure(figsize=(10, 8))
+sns.heatmap(df, cmap="YlGnBu", annot=False, fmt=".2f", cbar=True, vmin=0, vmax=np.max(P))
+plt.title("One-Day Transition Matrix Heatmap")
+plt.xlabel("New Volume State")
+plt.ylabel("Current Volume State")
+plt.show()

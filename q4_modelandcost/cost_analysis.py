@@ -79,16 +79,16 @@ print(df_results)
 #df_results.to_csv("threshold_policy_costs.csv", index=False)
 
 # --- Plot Costs vs Threshold ---
-#plt.figure(figsize=(10, 6))
-#plt.plot(df_results["Threshold"], df_results["3PL_Cost"], marker='o', label="3PL Cost")
-#plt.plot(df_results["Threshold"], df_results["Truck_Cost"], marker='s', label="Truck Rental Cost")
-#plt.xlabel("Shipment Threshold (ft³)")
-#plt.ylabel("Expected Daily Cost ($)")
-#plt.title("Cost vs Shipment Threshold")
-#plt.legend()
-#plt.grid(True)
-#plt.tight_layout()
-#plt.show()
+plt.figure(figsize=(10, 6))
+plt.plot(df_results["Threshold"], df_results["3PL_Cost"], marker='o', label="3PL Cost")
+plt.plot(df_results["Threshold"], df_results["Truck_Cost"], marker='s', label="Truck Rental Cost")
+plt.xlabel("Shipment Threshold (ft³)")
+plt.ylabel("Expected Daily Cost ($)")
+plt.title("Cost vs Shipment Threshold")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
 
 # --- Optimal Threshold Analysis ---
 opt_3pl = df_results.loc[df_results["3PL_Cost"].idxmin()]

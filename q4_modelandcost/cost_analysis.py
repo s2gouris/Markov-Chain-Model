@@ -4,9 +4,13 @@ import matplotlib.pyplot as plt
 import os
 
 # Correct path to the CSV file
-csv_path = r"C:\Users\kenei\Downloads\github\Markov-Chain-Model\q4_modelandcost\extended_transition_matrix.csv"
+#csv_path = r"C:\Users\gouri\OneDrive - University of Waterloo\Desktop\UWaterloo\Third Year\Winter 2025 (3A)\MSE 431\Final Project\Markov-Chain-Model\q4_modelandcost\extended_transition_matrix.csv"
 
-# Load the transition matrix from the previous script's output
+base_dir = os.path.dirname(os.path.dirname(__file__))  # go up one directory
+
+# Load transition matrix
+#P = pd.read_csv("../final_matrix/prof_suggested_model.csv", index_col=0).values
+csv_path = os.path.join(base_dir, "q4_modelandcost", "extended_transition_matrix.csv")
 P = pd.read_csv(csv_path, index_col=0).values
 
 volume_states = np.arange(0, 1850, 50)  # 0 to 1800 in 50-step increments
@@ -19,7 +23,7 @@ K2 = 328                                # 1800 ft³ truck cost
 c = 0.10 * k_per_m3                     # Holding cost per m³ per day
 holding_cost_per_cuft_per_day = c / 35.3147  # Convert m³ to ft³
 
-thresholds = np.arange(600, 1200 + 50, 50)
+thresholds = np.arange(0, 1850, 50)
 
 # --- Steady State Distribution ---
 eigvals, eigvecs = np.linalg.eig(P.T)
@@ -72,7 +76,7 @@ df_results = pd.DataFrame(results)
 print(df_results)
 
 # Save to CSV
-df_results.to_csv("threshold_policy_costs.csv", index=False)
+#df_results.to_csv("threshold_policy_costs.csv", index=False)
 
 # --- Plot Costs vs Threshold ---
 plt.figure(figsize=(10, 6))
@@ -85,3 +89,18 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 plt.show()
+
+# --- Optimal Threshold Analysis ---
+opt_3pl = df_results.loc[df_results["3PL_Cost"].idxmin()]
+opt_truck = df_results.loc[df_results["Truck_Cost"].idxmin()]
+
+# Determine truck size based on threshold
+truck_size = "900 ft³" if opt_truck["Threshold"] <= 900 else "1800 ft³"
+
+# Print results
+print(f"Optimal 3PL Threshold: {int(opt_3pl['Threshold'])} ft³")
+print(f"Expected 3PL Cost: ${opt_3pl['3PL_Cost']} per day")
+
+print(f"\nOptimal Truck Threshold: {int(opt_truck['Threshold'])} ft³")
+print(f"Expected Truck Cost: ${opt_truck['Truck_Cost']} per day")
+print(f"Truck Size Used: {truck_size}")
